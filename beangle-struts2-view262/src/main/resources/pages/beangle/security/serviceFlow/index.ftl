@@ -1,0 +1,8 @@
+[#ftl]
+[@b.head/]
+	[@b.form action="!search?orderBy=serviceFlow.code" title="ui.searchForm" target="serviceFlowlist" theme="search"]
+		[@b.textfields names="serviceFlow.title;标题"/]
+		[@b.select name="serviceFlow.enabled" label="common.status" items={'true':'有效','false':'无效'}  empty="..."/]
+	[/@]
+	[@b.div  href="!search?orderBy=code" id="serviceFlowlist" class="dataList"/]
+[@b.foot/]

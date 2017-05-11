@@ -1,0 +1,10 @@
+[#ftl]
+[@b.head/]
+[#include "../nav.ftl"/]
+[@b.form name="groupSearchForm"  action="!search" target="grouplist" title="ui.searchForm" theme="search"]
+	[@b.textfields names="userGroup.name;common.name,userGroup.owner.name;common.creator"/]
+	[@b.select items=categories empty="..." name="userGroup.category.id" label="entity.userCategory" option="id,title"/]
+	<input type="hidden" name="orderBy" value="userGroup.name"/>
+[/@]
+[@b.div id="grouplist" href="!search?orderBy=userGroup.name" /]
+[@b.foot/]

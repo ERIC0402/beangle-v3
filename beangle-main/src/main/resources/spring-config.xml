@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans>
+	<bean id="dataSource" class="org.springframework.jndi.JndiObjectFactoryBean">
+		<property name="jndiName">
+			<value>java:comp/env/jdbc/dataSource</value>
+		</property>
+	</bean>
+
+	<!-- Database Properties -->
+	<bean id="hibernateConfig">
+		<property name="properties">
+			<props merge="true">
+				<prop key="hibernate.dialect">org.hibernate.dialect.Oracle10gDialect</prop>
+				<prop key="hibernate.show_sql">true</prop>
+				<prop key="hibernate.hbm2ddl.auto"></prop>
+			</props>
+		</property>
+	</bean>
+
+<!-- 
+	<bean id="usernamePreauthFilter">
+		<property name="usernameSource">
+			<bean class="org.beangle.emsapp.demo.GivenUsernameSource" />
+		</property>
+	</bean>
+	 
+	<bean id="userDetailService" class="org.beangle.emsapp.demo.SimpleUserDetailServiceImpl" autowire="byName"/>
+	
+	<bean id="authorityManager" class="org.beangle.emsapp.demo.MockAuthorityManager" autowire="byName"/>
+	
+	<bean id="authenticationmanager">
+		<property name="providers">
+			<list>
+				<ref bean="preauthUserDetailProvider"/>
+			</list>
+		</property>
+	</bean>
+	-->
+	
+	<!-- <bean id="ldapUserStore" class="org.beangle.security.ldap.connect.SimpleLdapUserStore">
+        <property name="url" value="ldap://192.168.0.112:389"/>
+        <property name="base" value="dc=itc,dc=com"/>
+        <property name="userName" value="cn=root"/>
+        <property name="password" value="root"/>
+	</bean> -->
+	
+	
+	<!-- <bean id="ldapUserStore" class="org.beangle.security.ldap.connect.SimpleLdapUserStore">
+        <property name="url" value="ldap://192.168.1.210:389"/>
+        <property name="base" value="dc=shs,c=cn"/>
+        <property name="userName" value="cn=root"/>
+        <property name="password" value="123456"/>
+	</bean> -->
+	
+	<!-- <bean id="authenticationmanager" name="authenticationManager" class="org.beangle.security.auth.ProviderManager" autowire="byName">
+		<property name="providers">
+			<list>
+				<ref bean="preauthUserDetailProvider"/>
+				<ref bean="daoAuthenticationProvider"/>
+				<ref bean="ldapAuthenticationProvider"/>
+			</list>
+		</property>
+	</bean> -->
+	
+	<!-- <bean id="casConfig" class="org.beangle.security.cas.CasConfig">
+		<property name="casServer" value="http://192.168.0.85:8099/cas" />
+		<property name="localServer" value="192.168.0.99:8080" />
+	</bean>
+	<bean id="casAuthenticationProvider" class="org.beangle.security.cas.auth.CasAuthenticationProvider">
+		<property name="userDetailService" ref="userDetailService" />
+		<property name="ticketValidator" ref="casTicketValidator" />
+		<property name="key" value="an_id_for_this_auth_provider_only" />
+	</bean>
+	
+	<bean id="securityFilterChain" class="org.beangle.security.web.FilterChainProxy">
+		<property name="filters">
+			<list>
+				
+				<ref bean="httpSessionContextIntegrationFilter"/>
+				<ref bean="usernamePreauthFilter"/>
+				<ref bean="cookieUsernamePreauthFilter"/>
+				<ref bean="anonymousFilter"/>
+				<ref bean="exceptionTranslationFilter"/>
+				<ref bean="casPreauthFilter" />
+				<ref bean="concurrentSessionFilter"/>
+				<ref bean="filterSecurityInterceptor"/>
+			</list>
+		</property>
+	</bean>
+
+	<bean id="authenticationmanager" name="authenticationManager"
+		class="org.beangle.security.auth.ProviderManager" autowire="byName">
+		<property name="providers">
+			<list>
+				<ref bean="casAuthenticationProvider" />
+				<ref bean="preauthUserDetailProvider"/> 
+				<ref bean="daoAuthenticationProvider"/> 
+				<ref bean="ldapAuthenticationProvider"/>
+			</list>
+		</property>
+	</bean> -->
+</beans>
+

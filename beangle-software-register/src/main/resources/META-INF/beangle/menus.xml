@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<settings>
+	<resources>
+		<resource name="/common/file" title="文件上传" remark="" scope="protected"  categories="manager"/>
+	</resources>
+</settings>

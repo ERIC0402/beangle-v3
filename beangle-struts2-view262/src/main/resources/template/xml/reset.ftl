@@ -1,0 +1,1 @@
+<input type="reset" class="ip_6" value="${b.text('action.reset')}"/>

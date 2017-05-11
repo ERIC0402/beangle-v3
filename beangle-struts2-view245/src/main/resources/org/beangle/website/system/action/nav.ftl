@@ -1,0 +1,6 @@
+[#ftl]
+[@b.navmenu title="字典管理"]
+	[@ems.guard res="/system/dict-type"][@b.navitem title="字典类型" href="dict-type" /][/@]
+	[@ems.guard res="/system/dict-data"][@b.navitem title="字典数据" href="dict-data" /][/@]
+	[@ems.guard res="/system/system-argument"][@b.navitem title="系统参数" href="system-argument?method=edit" /][/@]
+[/@]

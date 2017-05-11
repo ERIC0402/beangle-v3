@@ -1,0 +1,2 @@
+[#ftl]
+${tag.value?html}

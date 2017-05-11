@@ -1,0 +1,7 @@
+[#ftl]
+[@b.navmenu title="投票管理"]
+	[@ems.guard res="/tp/select"][@b.navitem title="按人员选择" href="!search?paramId=${paramId!}&isSingle=${isSingle!}" /][/@]
+	[#if !isSingle?? || isSingle != '1']
+		[@ems.guard res="/tp/select"][@b.navitem title="按角色选择" href="!jueSe?paramId=${paramId!}&isSingle=${isSingle!}" /][/@]
+	[/#if]
+[/@]

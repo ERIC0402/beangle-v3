@@ -1,0 +1,338 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:tx="http://www.springframework.org/schema/tx" xmlns:jdbc="http://www.springframework.org/schema/jdbc"
+	xmlns:task="http://www.springframework.org/schema/task" xmlns:cache="http://www.springframework.org/schema/cache"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xsi:schemaLocation="http://www.springframework.org/schema/jdbc http://www.springframework.org/schema/jdbc/spring-jdbc.xsd
+        http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task.xsd
+        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/cache http://www.springframework.org/schema/cache/spring-cache.xsd
+        http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd
+        http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+
+	<context:annotation-config />
+	
+	<context:component-scan base-package="org.beangle" />
+
+	<bean
+		class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name="locations" value="classpath*:system.properties" />
+	</bean>
+	<!-- ems infra -->
+	<bean name="ems.base.service.config" class="org.beangle.ems.BaseServiceModule" />
+
+	<bean id="captchaService"
+		class="com.octo.captcha.service.image.DefaultManageableImageCaptchaService">
+		<property name="captchaEngine">
+			<bean class="org.beangle.ems.captcha.GmailEngine" />
+		</property>
+		<property name="minGuarantedStorageDelayInSeconds" value="600" />
+	</bean>
+
+	<bean name="mimeTypeProvider" autowire="byName"
+		class="org.beangle.web.mime.MimeTypeProvider">
+		<property name="resource">
+			<bean class="org.beangle.spring.config.ConfigResource">
+				<property name="globals"
+					value="classpath*:org/beangle/web/mime/mimetypes.properties" />
+				<property name="locations" value="classpath*:META-INF/mimetypes.properties" />
+			</bean>
+		</property>
+	</bean>
+
+	<bean name="urlPropertyConfigProvider" autowire="byName"
+		class="org.beangle.spring.config.UrlPropertyConfigProvider">
+		<property name="resource">
+			<bean class="org.beangle.spring.config.ConfigResource">
+				<property name="globals" value="classpath*:system-default.properties" />
+				<property name="locations" value="classpath*:META-INF/system.properties" />
+				<property name="users" value="classpath*:system.properties" />
+			</bean>
+		</property>
+	</bean>
+
+	<bean id="propertyConfig" autowire="byName"
+		class="org.beangle.spring.config.DefaultPropertyConfigFactory">
+		<property name="providers">
+			<list>
+				<ref bean="urlPropertyConfigProvider" />
+				<ref bean="daoPropertyConfigProvider" />
+			</list>
+		</property>
+	</bean>
+
+	<bean id="ruleExecutorBuilder"
+		class="org.beangle.ems.rule.engine.impl.DefaultRuleExecutorBuilder" />
+	<bean id="ruleBase" class="org.beangle.ems.rule.impl.RuleBaseImpl" />
+
+	<!-- ems security -->
+	<bean id="ems.security.defaultmodule" class="org.beangle.ems.security.DefaultModule"></bean>
+
+	<!--why name required? -->
+	<bean id="authenticationmanager" name="authenticationManager"
+		class="org.beangle.security.auth.ProviderManager" autowire="byName">
+		<property name="providers">
+			<list>
+				<ref bean="preauthUserDetailProvider" />
+				<ref bean="daoAuthenticationProvider" />
+			</list>
+		</property>
+	</bean>
+
+	<bean id="authenticationEntryPoint" class="org.beangle.security.web.auth.LoginUrlEntryPoint">
+		<property name="loginUrl" value="/login.action" />
+	</bean>
+
+	<bean id="securityFilterChain" class="org.beangle.security.web.FilterChainProxy">
+		<property name="filters">
+			<list>
+				<ref bean="httpSessionContextIntegrationFilter" />
+				<ref bean="usernamePreauthFilter" />
+				<ref bean="cookieUsernamePreauthFilter" />
+				<ref bean="anonymousFilter" />
+				<ref bean="exceptionTranslationFilter" />
+				<ref bean="concurrentSessionFilter" />
+				<ref bean="filterSecurityInterceptor" />
+			</list>
+		</property>
+	</bean>
+
+	<bean id="cookieUsernamePreauthFilter"
+		class="org.beangle.security.web.auth.preauth.UsernamePreauthFilter"
+		autowire="byName">
+		<property name="usernameSource">
+			<bean class="org.beangle.security.web.auth.preauth.CookieUsernameSource" />
+		</property>
+	</bean>
+
+
+	<bean id="logoutHandlerStack" class="org.beangle.security.web.auth.logout.LogoutHandlerStack">
+		<property name="handlers">
+			<list>
+				<ref bean="securityContextLogoutHandler" />
+			</list>
+		</property>
+	</bean>
+
+	<bean id="restrictionService"
+		class="org.beangle.ems.security.restrict.service.RestrictionServiceImpl"
+		autowire="byName">
+		<property name="providers">
+			<map>
+				<entry key="csv" value-ref="csvDataResolver" />
+				<entry key="oql" value-ref="oqlDataProvider" />
+			</map>
+		</property>
+		<property name="dataResolver" ref="identifierDataResolver" />
+	</bean>
+
+	<!-- emsapp security -->
+	<bean name="emsapp.security.config" class="org.beangle.emsapp.security.DefaultModule" />
+	<bean name="CommonDefaultModule" class="org.beangle.website.common.CommonDefaultModule" />
+
+	<!-- emsapp system -->
+	<bean name="emsapp.system.config" class="org.beangle.emsapp.system.DefaultModule" />
+	<bean name="staticfile.download" scope="prototype"
+		class="org.beangle.emsapp.system.action.StaticfileAction" autowire="byName">
+		<property name="loaders">
+			<list>
+				<ref bean="classpathDocLoader"></ref>
+			</list>
+		</property>
+	</bean>
+
+	<!-- security cas -->
+
+	<bean id="proxyGrantingTicketStorage"
+		class="org.jasig.cas.client.proxy.ProxyGrantingTicketStorageImpl" />
+
+	<bean id="casConfig" class="org.beangle.security.cas.CasConfig">
+		<property name="casServer" value="http://your/server/cas" />
+		<property name="localServer" value="localhost:8080" />
+	</bean>
+
+	<bean id="casPreauthFilter" class="org.beangle.security.cas.web.CasPreauthFilter">
+		<property name="authenticationManager" ref="authenticationManager" />
+		<property name="sessionRegistry" ref="sessionRegistry" />
+		<property name="proxyGrantingTicketStorage" ref="proxyGrantingTicketStorage" />
+		<property name="config" ref="casConfig" />
+		<property name="authenticationAliveChecker" ref="authenticationAliveChecker" />
+	</bean>
+
+	<bean id="casEntryPoint" class="org.beangle.security.cas.web.CasEntryPoint">
+		<property name="config" ref="casConfig" />
+	</bean>
+
+	<bean id="authenticationAliveChecker"
+		class="org.beangle.security.cas.auth.vendor.NeusoftCasAliveChecker">
+		<property name="config" ref="casConfig" />
+	</bean>
+
+	<bean id="casTicketValidator"
+		class="org.beangle.security.cas.auth.Cas20ServiceTicketValidatorFactory">
+		<property name="proxyGrantingTicketStorage" ref="proxyGrantingTicketStorage" />
+		<property name="config" ref="casConfig" />
+	</bean>
+
+	<bean id="casAuthenticationProvider" class="org.beangle.security.cas.auth.CasAuthenticationProvider">
+		<property name="userDetailService" ref="userDetailService" />
+		<property name="ticketValidator" ref="casTicketValidator" />
+		<property name="key" value="an_id_for_this_auth_provider_only" />
+	</bean>
+
+	<bean id="security.defaultmodule" class="org.beangle.security.DefaultModule"></bean>
+
+	<!-- idstar -->
+	<!-- <bean id="idstarValidator" class="org.beangle.security.idstar.auth.DefaultIdstarValidator"/> 
+		<bean id="idstarAuthenticationProvider" class="org.beangle.security.idstar.auth.DefaultIdstarAuthenticationProvider" 
+		autowire="byName"> <property name="idstarValidator" ref="idstarValidator"/> 
+		</bean> -->
+	<!-- <bean id="authenticationmanager" name="authenticationManager" class="org.beangle.security.auth.ProviderManager" 
+		autowire="byName"> <property name="providers"> <list> <ref bean="preauthUserDetailProvider"/> 
+		<ref bean="idstarAuthenticationProvider"/> <ref bean="daoAuthenticationProvider"/> 
+		</list> </property> </bean> -->
+	<!-- <bean id="usernamePreauthFilter"> <property name="usernameSource"> 
+		<bean class="org.beangle.security.idstar.preauth.IdStarUsernameSource"></bean> 
+		</property> </bean> -->
+
+	<!-- security ldap -->
+	<bean id="ldapUserStore" class="org.beangle.security.ldap.connect.SimpleLdapUserStore">
+	</bean>
+	<bean id="ldapValidator" class="org.beangle.security.ldap.auth.DefaultLdapValidator">
+		<property name="userStore" ref="ldapUserStore" />
+	</bean>
+	<bean id="ldapAuthenticationProvider"
+		class="org.beangle.security.ldap.auth.DefaultLdapAuthenticationProvider"
+		autowire="byName">
+		<property name="ldapValidator" ref="ldapValidator" />
+	</bean>
+	<!-- security web -->
+	<bean id="security.web.defaultmodule" class="org.beangle.security.web.DefaultModule"></bean>
+
+
+	<!-- db -->
+	<bean id="hibernateModelBuilder"
+		class="org.beangle.model.persist.hibernate.HibernateModelBuilder"
+		init-method="build">
+		<property name="sessionFactory" ref="sessionFactory" />
+	</bean>
+
+	<bean id="dataSource"
+		class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+		<property name="driverClassName">
+			<value>org.h2.Driver</value>
+		</property>
+		<property name="url">
+			<value>jdbc:h2:./target/beangle;AUTO_SERVER=TRUE</value>
+		</property>
+		<property name="username">
+			<value>sa</value>
+		</property>
+		<property name="password">
+			<value></value>
+		</property>
+	</bean>
+
+	<!-- Database Properties -->
+	<bean id="hibernateConfig"
+		class="org.springframework.beans.factory.config.PropertiesFactoryBean">
+		<property name="properties">
+			<props>
+				<prop key="hibernate.dialect">org.hibernate.dialect.H2Dialect</prop>
+				<prop key="hibernate.connection.provider_class">org.hibernate.connection.DatasourceConnectionProvider
+				</prop>
+				<prop key="hibernate.query.factory_class">org.hibernate.hql.ast.ASTQueryTranslatorFactory
+				</prop>
+				<prop key="hibernate.max_fetch_depth">1</prop>
+				<prop key="hibernate.default_batch_fetch_size">8</prop>
+				<prop key="hibernate.jdbc.fetch_size">8</prop>
+				<prop key="hibernate.jdbc.batch_size">20</prop>
+				<prop key="hibernate.jdbc.batch_versioned_data">true</prop>
+				<prop key="hibernate.jdbc.use_streams_for_binary">true</prop>
+				<prop key="hibernate.jdbc.use_get_generated_keys">true</prop>
+				<prop key="hibernate.cache.region.factory_class">net.sf.ehcache.hibernate.EhCacheRegionFactory
+				</prop>
+				<prop key="hibernate.cache.use_second_level_cache">true</prop>
+				<prop key="hibernate.cache.use_query_cache">true</prop>
+				<prop key="hibernate.query.substitutions">true 1, false 0, yes 'Y', no 'N'</prop>
+				<prop key="hibernate.show_sql">false</prop>
+			</props>
+		</property>
+	</bean>
+
+	<bean id="sessionFactory"
+		class="org.springframework.orm.hibernate3.LocalSessionFactoryBean">
+		<property name="dataSource" ref="dataSource" />
+		<property name="namingStrategy" ref="railsNamingStrategy" />
+		<property name="lobHandler" ref="lobHandler" />
+		<property name="hibernateProperties" ref="hibernateConfig" />
+		<property name="configurationClass"
+			value="org.beangle.model.persist.hibernate.OverrideConfiguration" />
+		<property name="configLocations">
+			<value>classpath*:META-INF/hibernate.cfg.xml</value>
+		</property>
+	</bean>
+
+	<bean id="transactionManager"
+		class="org.springframework.orm.hibernate3.HibernateTransactionManager">
+		<property name="sessionFactory" ref="sessionFactory" />
+	</bean>
+
+	<!-- baseTransactionProxy,subclass must supply target property -->
+	<bean id="baseTransactionProxy"
+		class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean"
+		abstract="true">
+		<property name="transactionManager" ref="transactionManager" />
+		<property name="transactionAttributes">
+			<props>
+				<prop key="save*">PROPAGATION_REQUIRED</prop>
+				<prop key="update*">PROPAGATION_REQUIRED</prop>
+				<prop key="delete*">PROPAGATION_REQUIRED</prop>
+				<prop key="batch*">PROPAGATION_REQUIRED</prop>
+				<prop key="execute*">PROPAGATION_REQUIRED</prop>
+				<prop key="remove*">PROPAGATION_REQUIRED</prop>
+				<prop key="create*">PROPAGATION_REQUIRED</prop>
+				<prop key="init*">PROPAGATION_REQUIRED</prop>
+				<prop key="authorize*">PROPAGATION_REQUIRED</prop>
+				<prop key="*">PROPAGATION_REQUIRED,readOnly</prop>
+			</props>
+		</property>
+	</bean>
+
+
+	<bean id="entityDao" parent="baseTransactionProxy">
+		<property name="target">
+			<bean class="org.beangle.model.persist.hibernate.HibernateEntityDao"
+				autowire="byName">
+			</bean>
+		</property>
+	</bean>
+
+	<bean id="railsNamingStrategy"
+		class="org.beangle.model.persist.hibernate.support.RailsNamingStrategy">
+		<property name="tableNameConfig" ref="tableNameConfig" />
+	</bean>
+
+	<bean id="tableNameConfig"
+		class="org.beangle.model.persist.hibernate.support.DefaultTableNameConfig">
+		<property name="resource">
+			<bean class="org.beangle.spring.config.ConfigResource">
+				<property name="locations"
+					value="classpath*:META-INF/beangle/table.properties" />
+				<property name="users" value="classpath*:beangle/table.properties" />
+			</bean>
+		</property>
+	</bean>
+
+	<bean id="lobHandler" class="org.springframework.jdbc.support.lob.DefaultLobHandler"
+		lazy-init="true" />
+
+
+	<bean id="commonUtils_Module" class="org.beangle.website.common.DefaultModule">
+	</bean>
+	<bean id="base_dict_Module" class="org.beangle.website.system.DefaultModule">
+	</bean>
+	<bean id="register_Module" class="org.beangle.softwareRegister.RegisterModule">
+	</bean>
+</beans>

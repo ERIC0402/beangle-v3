@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<root>
+  <menu id="2888" code="1" name="平台管理" title="平台管理" profileId="3"/>
+  <menu id="2952" code="1.1" name="基础信息" title="基础信息" profileId="3" parentId="2888"/>
+  <menu id="2920" code="1.1.1" name="部门管理" title="部门管理" entry="/zyk/core/department" profileId="3" parentId="2952">
+    <resource id="4001" name="/zyk/core/department" title="部门管理" scope="2">
+      <category id="3"/>
+    </resource>
+  </menu>
+  <menu id="2889" code="1.1.2" name="资源分类" title="资源分类" entry="/zyk/core/zyfl" profileId="3" parentId="2952">
+    <resource id="3969" name="/zyk/core/zyfl" title="资源分类" scope="2">
+      <category id="3"/>
+    </resource>
+  </menu>
+  <menu id="2984" code="1.1.3" name="保密等级" title="保密等级" entry="/zyk/core/bmdj" profileId="3" parentId="2952">
+    <resource id="4065" name="/zyk/core/bmdj" title="保密等级" scope="2">
+      <category id="3"/>
+    </resource>
+  </menu>
+  <menu id="270" code="5" name="System" title="系统管理" remark="系统管理" profileId="3"/>
+  <menu id="33" code="5.01" name="basic info" title="基础信息" remark="系统基础数据管理" profileId="3" parentId="270"/>
+  <menu id="1705" code="5.01.1" name="字典类型" title="字典类型" entry="/system/index" profileId="3" parentId="33">
+    <resource id="2306" name="/system/dictData" title="字典数据" scope="2">
+      <category id="3"/>
+    </resource>
+    <resource id="2305" name="/system/dictType" title="字典类型" scope="2">
+      <category id="3"/>
+    </resource>
+  </menu>
+  <menu id="2504" code="5.01.2" name="数据字典树" title="数据字典树" entry="/system/dict-tree" profileId="3" parentId="33">
+    <resource id="3329" name="/system/dict-tree" title="数据字典树" scope="2"/>
+  </menu>
+  <menu id="1736" code="5.01.3" name="流程管理" title="流程管理" entry="/workflow/workflow" profileId="3" parentId="33">
+    <resource id="2338" name="/workflow/step-node" title="步骤节点" scope="2">
+      <category id="2"/>
+      <category id="1"/>
+      <category id="3"/>
+    </resource>
+    <resource id="2372" name="/workflow/task-node" title="任务节点" scope="2">
+      <category id="2"/>
+      <category id="1"/>
+      <category id="3"/>
+    </resource>
+    <resource id="2374" name="/workflow/task-node-decision" title="任务节点跳转" scope="2">
+      <category id="2"/>
+      <category id="1"/>
+      <category id="3"/>
+    </resource>
+    <resource id="2337" name="/workflow/workflow" title="流程管理" scope="2">
+      <category id="2"/>
+      <category id="1"/>
+      <category id="3"/>
+    </resource>
+    <resource id="2371" name="/workflow/task" title="任务管理" scope="2">
+      <category id="2"/>
+      <category id="1"/>
+      <category id="3"/>
+    </resource>
+    <resource id="2373" name="/workflow/task-node-constraint" title="任务节点限制" scope="2">
+      <category id="2"/>
+      <category id="1"/>
+      <category id="3"/>
+    </resource>
+    <resource id="2370" name="/workflow/node-decision" title="节点跳转" scope="2">
+      <category id="2"/>
+      <category id="1"/>
+      <category id="3"/>
+    </resource>
+    <resource id="2369" name="/workflow/node-constraint" title="节点限制" scope="2">
+      <category id="2"/>
+      <category id="1"/>
+      <category id="3"/>
+    </resource>
+  </menu>
+  <menu id="34" code="5.02" name="Secruity" title="权限管理" profileId="3" parentId="270"/>
+  <menu id="306" code="5.02.1" name="Security" title="用户权限" entry="/security/index" remark="权限管理" profileId="3" parentId="34">
+    <resource id="447" name="/security/menu" title="系统菜单" scope="1">
+      <category id="3"/>
+    </resource>
+    <resource id="387" name="/security/sessioninfo-log" title="在线记录" scope="2">
+      <category id="3"/>
+    </resource>
+    <resource id="448" name="/security/restrict-meta" title="数据权限模式" scope="2">
+      <category id="3"/>
+    </resource>
+    <resource id="1265" name="/avatar/user" title="用户头像" scope="2">
+      <category id="3"/>
+    </resource>
+    <resource id="1266" name="/avatar/my" title="我的头像" scope="1">
+      <category id="2"/>
+      <category id="1"/>
+      <category id="3"/>
+    </resource>
+    <resource id="1263" name="/security/my" title="我的权限" scope="1">
+      <category id="2"/>
+      <category id="1"/>
+      <category id="3"/>
+    </resource>
+    <resource id="1264" name="/avatar/board" title="头像管理" scope="2">
+      <category id="3"/>
+    </resource>
+    <resource id="452" name="/security/restriction" title="数据权限" scope="2">
+      <category id="3"/>
+    </resource>
+    <resource id="1262" name="/security/index" title="权限管理控制台" scope="1">
+      <category id="3"/>
+    </resource>
+    <resource id="821" name="/security/menu-profile" title="菜单设置" scope="2">
+      <category id="3"/>
+    </resource>
+    <resource id="15" name="/security/authority" title="授权管理" scope="1">
+      <category id="3"/>
+    </resource>
+    <resource id="98" name="/security/resource" title="系统功能" scope="2">
+      <category id="3"/>
+    </resource>
+    <resource id="701" name="/security/monitor" title="系统监控" scope="2">
+      <category id="3"/>
+    </resource>
+    <resource id="212" name="/security/user" title="用户管理" scope="2">
+      <category id="3"/>
+    </resource>
+    <resource id="120" name="/security/group" title="角色管理" scope="2">
+      <category id="3"/>
+    </resource>
+  </menu>
+  <menu id="1703" code="5.02.2" name="Session Monitor" title="会话监控" entry="/security/monitor" profileId="3" parentId="34">
+    <resource id="701" name="/security/monitor" title="系统监控" scope="2">
+      <category id="3"/>
+    </resource>
+    <resource id="387" name="/security/sessioninfo-log" title="在线记录" scope="2">
+      <category id="3"/>
+    </resource>
+  </menu>
+  <menu id="1704" code="5.02.4" name="Avatar" title="用户头像" entry="/avatar/board" profileId="3" parentId="34">
+    <resource id="1264" name="/avatar/board" title="头像管理" scope="2">
+      <category id="3"/>
+    </resource>
+    <resource id="1265" name="/avatar/user" title="用户头像" scope="2">
+      <category id="3"/>
+    </resource>
+  </menu>
+  <menu id="35" code="5.03" name="Setting" title="系统设置" profileId="3" parentId="270"/>
+  <menu id="562" code="5.03.01" name="Download" title="公告与文档" entry="download" profileId="3" parentId="35">
+    <resource id="261" name="/notice" title="系统公告" scope="2">
+      <category id="3"/>
+    </resource>
+    <resource id="263" name="/document" title="系统文档" scope="1">
+      <category id="2"/>
+      <category id="1"/>
+      <category id="3"/>
+    </resource>
+  </menu>
+  <menu id="433" code="5.03.02" name="Preferences" title="使用偏好" entry="/preference" profileId="3" parentId="35"/>
+  <menu id="529" code="5.03.03" name="系统状态" title="系统状态" entry="/system/info" remark="运行状态、负载情况、日志" profileId="3" parentId="35">
+    <resource id="1267" name="/system/info" title="系统信息" scope="2">
+      <category id="3"/>
+    </resource>
+    <resource id="1268" name="/system/file" title="系统文件" scope="1">
+      <category id="3"/>
+    </resource>
+    <resource id="1269" name="/system/property" title="系统配置" scope="1">
+      <category id="3"/>
+    </resource>
+  </menu>
+</root>

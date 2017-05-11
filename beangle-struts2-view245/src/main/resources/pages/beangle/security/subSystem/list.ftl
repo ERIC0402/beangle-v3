@@ -1,0 +1,20 @@
+[#ftl]
+[#include "../status.ftl"/]
+[@b.head/]
+[@b.grid  items=subSystems var="subSystem"]
+	[@b.gridbar]
+		bar.addItem("${b.text("action.new")}",action.add());
+		bar.addItem("${b.text("action.modify")}",action.edit());
+		bar.addItem("${b.text("action.delete")}",action.remove());
+	[/@]
+	[@b.row]
+		[@b.boxcol/]
+		[@b.col width="20%" property="name" title="名称"/]
+		[@b.col width="30%" property="domain" title="域名" /]
+		[@b.col width="10%" property="contextPath" title="根路径" /]
+		[@b.col width="10%" property="appid" title="APPID" /]
+		[@b.col width="20%" property="pass" title="密钥" /]
+		[@b.col property="enabled" title="common.status" width="10%"][@enableInfo subSystem.enabled/][/@]
+	[/@]
+[/@]
+[@b.foot/]

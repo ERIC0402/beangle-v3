@@ -1,0 +1,36 @@
+.girdbar-pgbar {
+    float: right;
+    margin-top: 2px;
+    margin-right: 5px;
+    margin-bottom: 0px;
+    vertical-align: middle
+}
+
+.pgbar-label {
+    background-color: #e9f2f8;
+}
+
+.pgbar-input {
+    width: 45px;
+    height: 25px;
+}
+
+.pgbar-selbox {
+    width: 50px;
+    height: 25px;
+    font-size: 13px;
+    margin: 0px;
+}
+
+.pgbar-go {
+    width: 30px;
+    height: 25px;
+    font-size: 13px;
+    margin: 0px;
+}
+
+.top_tool_bar{ float:right; color:#2d6fb5; position:relative; height:30px;}
+.top_tool_bar a.first_a{ color:#2d6fb5; float:left;}
+.top_tool_bar span.span_1{ padding:0px 10px; float:left;}
+.top_tool_bar font.f_1{ color:#666; font-size:12px; float:left;}
+.top_tool_bar font.f_2{ color:#eba018; font-size:12px;}
